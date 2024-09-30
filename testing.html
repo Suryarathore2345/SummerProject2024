@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backend Connection Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            color: #333;
+        }
+        h2 {
+            color: green;
+        }
+        button {
+            background-color: green;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: darkgreen;
+        }
+        .result {
+            margin-top: 20px;
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Email Sending Functionality</h2>
+        <input type="text" id="emailSender" placeholder="Your Email" />
+        <input type="text" id="emailReceiver" placeholder="Recipient's Email" />
+        <input type="text" id="emailSubject" placeholder="Email Subject" />
+        <textarea id="emailMessage" placeholder="Your Message"></textarea>
+        <input type="text" id="emailUsername" placeholder="Email Service Username (if required)" />
+        <input type="password" id="emailPassword" placeholder="Email Service Password (if required)" />
+        <button onclick="sendEmail()">Send Email</button>
+        <div class="result" id="emailResult"></div>
+    </div>
+
+    <div class="container">
+        <h2>Bulk Email Functionality</h2>
+        <input type="text" id="bulkEmailSender" placeholder="Your Email" />
+        <input type="password" id="bulkEmailPassword" placeholder="Email Service Password" />
+        <input type="text" id="bulkEmailSubject" placeholder="Email Subject" />
+        <textarea id="bulkEmailMessage" placeholder="Your Message"></textarea>
+        <input type="text" id="bulkEmailRecipients" placeholder="Recipient Emails (comma separated)" />
+        <button onclick="sendBulkEmail()">Send Bulk Email</button>
+        <div class="result" id="bulkEmailResult"></div>
+    </div>
+
+    <div class="container">
+        <h2>SMS Functionality</h2>
+        <input type="text" id="smsToPhone" placeholder="Recipient's Phone Number" />
+        <textarea id="smsMessage" placeholder="Your SMS Message"></textarea>
+        <input type="text" id="smsAccountSid" placeholder="Account SID" />
+        <input type="text" id="smsAuthToken" placeholder="Auth Token" />
+        <button onclick="sendSms()">Send SMS</button>
+        <div class="result" id="smsResult"></div>
+    </div>
+
+    <div class="container">
+        <h2>Google Search</h2>
+        <input type="text" id="searchQuery" placeholder="Enter your search query" />
+        <button onclick="googleSearch()">Google Search</button>
+        <div class="result" id="googleSearchResult"></div>
+    </div>
+
+    <div class="container">
+        <h2>Get Location</h2>
+        <button onclick="getLocation()">Get Location</button>
+        <p id="location"></p>
+    </div>
+
+    <div class="container">
+        <h2>Text to Audio</h2>
+        <input type="text" id="audioText" placeholder="Enter text to convert to audio" />
+        <button onclick="textToAudio()">Text to Audio</button>
+        <div class="result" id="textToAudioResult"></div>
+    </div>
+
+    <div class="container">
+        <h2>Set Volume</h2>
+        <input type="number" id="volumeLevel" placeholder="Volume Level (0-100)" />
+        <button onclick="setVolume()">Set Volume</button>
+        <div class="result" id="setVolumeResult"></div>
+    </div>
+
+    <div class="container">
+        <h2>Preprocess Data</h2>
+        <input type="text" id="preprocessDataInput" placeholder="Enter data to preprocess" />
+        <button onclick="preprocessData()">Preprocess Data</button>
+        <div class="result" id="preprocessDataResult"></div>
+    </div>
+
+    <div class="container">
+        <h2>Load Model</h2>
+        <button onclick="loadModel()">Load Model</button>
+        <div class="result" id="loadModelResult"></div>
+    </div>
+
+    <div class="container">
+        <h2>Crop Face</h2>
+        <input type="text" id="cropImageUrl" placeholder="Image URL to crop" />
+        <button onclick="cropFace()">Crop Face</button>
+        <div class="result" id="cropFaceResult"></div>
+    </div>
+
+    <div class="container">
+        <h2>Create Custom Image</h2>
+        <input type="text" id="customImageDescription" placeholder="Description for custom image" />
+        <button onclick="createCustomImage()">Create Custom Image</button>
+        <div class="result" id="createCustomImageResult"></div>
+    </div>
+
+    <div class="container">
+        <h2>Apply Filter</h2>
+        <input type="text" id="filterImageUrl" placeholder="Image URL to apply filter" />
+        <input type="text" id="filterName" placeholder="Filter to apply" />
+        <button onclick="applyFilter()">Apply Filter</button>
+        <div class="result" id="applyFilterResult"></div>
+    </div>
+
+    <script>
+        async function sendEmail() {
+            const emailData = {
+                sender_email: document.getElementById('emailSender').value,
+                receiver_email: document.getElementById('emailReceiver').value,
+                subject: document.getElementById('emailSubject').value,
+                message: document.getElementById('emailMessage').value,
+                username: document.getElementById('emailUsername').value,
+                password: document.getElementById('emailPassword').value
+            };
+
+            try {
+                const response = await fetch('http://127.0.0.1:80/send_email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(emailData)
+                });
+
+                const result = await response.json();
+                document.getElementById('emailResult').innerText = 'Email sent successfully!';
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('emailResult').innerText = 'Error sending email.';
+            }
+        }
+
+        async function sendBulkEmail() {
+            const bulkEmailData = {
+                sender_email: document.getElementById('bulkEmailSender').value,
+                password: document.getElementById('bulkEmailPassword').value,
+                subject: document.getElementById('bulkEmailSubject').value,
+                message: document.getElementById('bulkEmailMessage').value,
+                recipients: document.getElementById('bulkEmailRecipients').value.split(',')
+            };
+
+            try {
+                const response = await fetch('http://127.0.0.1:80/send_bulk_email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(bulkEmailData)
+                });
+
+                const result = await response.json();
+                document.getElementById('bulkEmailResult').innerText = 'Bulk emails sent successfully!';
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('bulkEmailResult').innerText = 'Error sending bulk emails.';
+            }
+        }
+
+        async function sendSms() {
+            const smsData = {
+                to_phone: document.getElementById('smsToPhone').value,
+                message: document.getElementById('smsMessage').value,
+                account_sid: document.getElementById('smsAccountSid').value,
+                auth_token: document.getElementById('smsAuthToken').value
+            };
+
+            try {
+                const response = await fetch('http://127.0.0.1:80/send_sms', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(smsData)
+                });
+
+                const result = await response.json();
+                document.getElementById('smsResult').innerText = 'SMS sent successfully!';
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('smsResult').innerText = 'Error sending SMS.';
+            }
+        }
+
+        async function googleSearch() {
+            const query = document.getElementById('searchQuery').value;
+            try {
+                const response = await fetch('http://127.0.0.1:80/google_search', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ query })
+                });
+
+                const result = await response.json();
+                document.getElementById('googleSearchResult').innerText = JSON.stringify(result);
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('googleSearchResult').innerText = 'Error during Google search.';
+            }
+        }
+
+        async function getLocation() {
+            try {
+                const response = await fetch('http://127.0.0.1:80/get_location');
+                const location = await response.json();
+                document.getElementById('location').innerText = `Location: ${location}`;
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('location').innerText = 'Error getting location.';
+            }
+        }
+
+        async function textToAudio() {
+            const text = document.getElementById('audioText').value;
+            try {
+                const response = await fetch('http://127.0.0.1:80/text_to_audio', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ text })
+                });
+
+                const result = await response.json();
+                document.getElementById('textToAudioResult').innerText = 'Audio generated successfully!';
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('textToAudioResult').innerText = 'Error generating audio.';
+            }
+        }
+
+        async function setVolume() {
+            const volume = document.getElementById('volumeLevel').value;
+            try {
+                const response = await fetch('http://127.0.0.1:80/set_volume', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ volume })
+                });
+
+                const result = await response.json();
+                document.getElementById('setVolumeResult').innerText = 'Volume set successfully!';
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('setVolumeResult').innerText = 'Error setting volume.';
+            }
+        }
+
+        async function preprocessData() {
+            const data = document.getElementById('preprocessDataInput').value;
+            try {
+                const response = await fetch('http://127.0.0.1:80/preprocess_data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ data })
+                });
+
+                const result = await response.json();
+                document.getElementById('preprocessDataResult').innerText = 'Data preprocessed successfully!';
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('preprocessDataResult').innerText = 'Error preprocessing data.';
+            }
+        }
+
+        async function loadModel() {
+            try {
+                const response = await fetch('http://127.0.0.1:80/load_model');
+                const result = await response.json();
+                document.getElementById('loadModelResult').innerText = 'Model loaded successfully!';
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('loadModelResult').innerText = 'Error loading model.';
+            }
+        }
+
+        async function cropFace() {
+            const imageUrl = document.getElementById('cropImageUrl').value;
+            try {
+                const response = await fetch('http://127.0.0.1:80/crop_face', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ image_url: imageUrl })
+                });
+
+                const result = await response.json();
+                document.getElementById('cropFaceResult').innerText = 'Face cropped successfully!';
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('cropFaceResult').innerText = 'Error cropping face.';
+            }
+        }
+
+        async function createCustomImage() {
+            const description = document.getElementById('customImageDescription').value;
+            try {
+                const response = await fetch('http://127.0.0.1:80/create_custom_image', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ description })
+                });
+
+                const result = await response.json();
+                document.getElementById('createCustomImageResult').innerText = 'Custom image created successfully!';
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('createCustomImageResult').innerText = 'Error creating custom image.';
+            }
+        }
+
+        async function applyFilter() {
+            const imageUrl = document.getElementById('filterImageUrl').value;
+            const filterName = document.getElementById('filterName').value;
+            try {
+                const response = await fetch('http://127.0.0.1:80/apply_filter', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ image_url: imageUrl, filter_name: filterName })
+                });
+
+                const result = await response.json();
+                document.getElementById('applyFilterResult').innerText = 'Filter applied successfully!';
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('applyFilterResult').innerText = 'Error applying filter.';
+            }
+        }
+    </script>
+</body>
+</html>

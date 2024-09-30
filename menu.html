@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Multi Task Hub</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Inter:wght@700;800&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #e3f2fd; /* Light blue background */
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .task-box {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            margin: 10px;
+            flex: 0 0 calc(20% - 20px); /* Five boxes in a row */
+            position: relative;
+            overflow: hidden;
+        }
+
+        .icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 10px;
+        }
+
+        .btn-primary {
+            background-color: #4fc3f7; /* Light blue button */
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background-color: #03a9f4; /* Darker blue on hover */
+        }
+
+        h1, h6 {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header Start -->
+        <h1 class="text-center">Task Types</h1>
+        <p class="text-center">Select a task to execute using the options below. The tasks range from system information retrieval to complex AWS operations.</p>
+
+        <!-- Category Start -->
+        <div class="row" id="taskContainer"></div>
+
+        <script>
+            const tasks = [
+                { id: 1, name: "Send Email", icon: "https://th.bing.com/th/id/OIP.2dec2_vfRBVOqsbkngx9KwHaGB?w=860&h=700&rs=1&pid=ImgDetMain" },
+                { id: 2, name: "Send Bulk Email", icon: "https://example.com/icon2.png" },
+                { id: 3, name: "Set Volume", icon: "https://example.com/icon3.png" },
+                { id: 4, name: "Get Volume", icon: "https://example.com/icon4.png" },
+                { id: 5, name: "Get Location", icon: "https://example.com/icon5.png" },
+                { id: 6, name: "Send SMS", icon: "https://example.com/icon6.png" },
+                { id: 7, name: "Search", icon: "https://example.com/icon7.png", inputs: ["Query"] },
+                { id: 8, name: "Text to Audio", icon: "https://example.com/icon8.png" },
+                { id: 9, name: "Process Data", icon: "https://example.com/icon9.png" },
+                { id: 10, name: "Crop Image", icon: "https://example.com/icon14.png" },
+                { id: 11, name: "Generate Image", icon: "https://example.com/icon14.png" },
+                { id: 12, name: "Add Accessories on Image", icon: "https://example.com/icon14.png" },
+                { id: 13, name: "Apply Filters", icon: "https://example.com/icon14.png" }
+            ];
+
+            const taskContainer = document.getElementById("taskContainer");
+
+            tasks.forEach(task => {
+                const taskDiv = document.createElement("div");
+                taskDiv.className = "task-box";
+                taskDiv.innerHTML = `
+                    <div class="icon">
+                        <img class="img-fluid" src="${task.icon}" alt="Icon" style="width: 100%; height: 100%; object-fit: contain;">
+                    </div>
+                    <h6>${task.name}</h6>
+                    ${task.inputs ? task.inputs.map(input => `
+                        <input type="text" name="${input.toLowerCase().replace(/ /g, '_')}" placeholder="${input}" class="form-control mb-2" required>`).join('') : ''}
+                    <input type="hidden" name="task" value="${task.id}">
+                    <button type="submit" class="btn btn-primary mt-2">Execute</button>
+                `;
+                taskContainer.appendChild(taskDiv);
+            });
+        </script>
+
+        <!-- Footer Start -->
+        <div class="text-center py-4">
+            <p>&copy; 2024 Multi Task Hub. All Rights Reserved.</p>
+        </div>
+        <!-- Footer End -->
+    </div>
+</body>
+
+</html>
